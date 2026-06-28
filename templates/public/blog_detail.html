@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - Mar Art{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'blog' %}">Blog</a></li>
+                <li class="breadcrumb-item active">{{ post.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post Header -->
+                <div class="mb-4">
+                    <span class="badge bg-success mb-2">{{ post.get_category_display }}</span>
+                    <h1 class="fw-bold mb-3">{{ post.title }}</h1>
+                    <p class="text-muted">
+                        <i class="bi bi-calendar me-2"></i>{{ post.publication_date|date:"d M Y" }}
+                    </p>
+                </div>
+
+                <!-- Post Image -->
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded shadow mb-4 w-100" alt="{{ post.title }}">
+                {% endif %}
+
+                <!-- Post Content -->
+                <div class="blog-content mb-5">
+                    {{ post.content|linebreaks }}
+                </div>
+
+                <!-- Share -->
+                <div class="bg-light rounded p-4 mb-5">
+                    <h5 class="fw-bold mb-3">Compartir este artículo</h5>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-info"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-success"><i class="bi bi-whatsapp"></i></a>
+                        <a href="#" class="btn btn-outline-danger"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Related Posts -->
+                {% if related_posts %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="fw-bold mb-0">Artículos Relacionados</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for related in related_posts %}
+                        <div class="d-flex mb-3 pb-3 border-bottom">
+                            {% if related.image %}
+                            <img src="{{ related.image.url }}" class="rounded me-3" width="80" height="60" style="object-fit: cover;" alt="{{ related.title }}">
+                            {% endif %}
+                            <div>
+                                <h6 class="fw-bold mb-1"><a href="{{ related.get_absolute_url }}" class="text-decoration-none text-dark">{{ related.title|truncatewords:8 }}</a></h6>
+                                <small class="text-muted">{{ related.publication_date|date:"d M Y" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- CTA -->
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold mb-3">¿Necesitas ayuda con tu proyecto?</h5>
+                        <p class="mb-4">Estamos aquí para ayudarte a alcanzar tus objetivos.</p>
+                        <a href="{% url 'contact' %}" class="btn btn-light">Contáctanos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

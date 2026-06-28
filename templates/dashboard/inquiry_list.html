@@ -1,0 +1,65 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}Solicitudes{% endblock %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Solicitudes de cotizacion</h3>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        {% if inquiries %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>WhatsApp</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Fecha requerida</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inquiry in inquiries %}
+                    <tr>
+                        <td>{{ inquiry.full_name }}</td>
+                        <td>{{ inquiry.whatsapp }}</td>
+                        <td>{{ inquiry.get_service_interest_display }}</td>
+                        <td>{{ inquiry.quantity }}</td>
+                        <td>{{ inquiry.needed_date|default:"Por definir" }}</td>
+                        <td><span class="badge {% if inquiry.status == 'new' %}bg-warning{% elif inquiry.status == 'contacted' %}bg-info{% elif inquiry.status == 'closed' %}bg-success{% else %}bg-secondary{% endif %}">{{ inquiry.get_status_display }}</span></td>
+                        <td>
+                            <form method="post" action="{% url 'inquiry_update_status' inquiry.pk %}">
+                                {% csrf_token %}
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="new" {% if inquiry.status == 'new' %}selected{% endif %}>Pendiente</option>
+                                    <option value="contacted" {% if inquiry.status == 'contacted' %}selected{% endif %}>Revisada</option>
+                                    <option value="closed" {% if inquiry.status == 'closed' %}selected{% endif %}>Completada</option>
+                                    <option value="cancelled" {% if inquiry.status == 'cancelled' %}selected{% endif %}>Cancelada</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <small class="text-muted"><strong>Idea:</strong> {{ inquiry.message }}</small>
+                            {% if inquiry.reference_image %}
+                            <a class="ms-3" href="{{ inquiry.reference_image.url }}" target="_blank" rel="noopener">Ver referencia</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox display-1 text-muted"></i>
+            <p class="text-muted mt-3">No hay solicitudes recibidas.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

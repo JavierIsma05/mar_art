@@ -1,0 +1,274 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}Calendario de Publicaciones{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calendar-shell {
+        background: #fff;
+        border: 1px solid #e6eaf0;
+        border-radius: 8px;
+        box-shadow: 0 14px 38px rgba(10, 20, 40, .08);
+        overflow: hidden;
+    }
+
+    .calendar-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .calendar-title h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: 0;
+    }
+
+    .calendar-title p {
+        color: #667085;
+        margin: 4px 0 0;
+    }
+
+    .calendar-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .calendar-summary {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .calendar-pill {
+        border: 1px solid #d7deea;
+        border-radius: 8px;
+        color: #1f2937;
+        background: #fff;
+        padding: 8px 12px;
+        font-weight: 700;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(120px, 1fr));
+    }
+
+    .calendar-weekday {
+        background: #f4f7fb;
+        color: #667085;
+        font-size: .78rem;
+        font-weight: 800;
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #e6eaf0;
+    }
+
+    .calendar-day {
+        min-height: 136px;
+        padding: 10px;
+        border-right: 1px solid #e6eaf0;
+        border-bottom: 1px solid #e6eaf0;
+        background: #fff;
+    }
+
+    .calendar-day:nth-child(7n) {
+        border-right: 0;
+    }
+
+    .calendar-day-muted {
+        background: #f8fafc;
+        color: #98a2b3;
+    }
+
+    .calendar-day-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .calendar-day-add {
+        color: #98a2b3;
+        text-decoration: none;
+        font-size: .95rem;
+    }
+
+    .calendar-day-add:hover {
+        color: var(--primary-color);
+    }
+
+    .calendar-day-number {
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+    }
+
+    .calendar-day-today .calendar-day-number {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .calendar-event-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .calendar-event {
+        display: block;
+        border-radius: 8px;
+        color: #fff;
+        font-size: .82rem;
+        font-weight: 700;
+        line-height: 1.2;
+        padding: 7px 8px;
+        text-decoration: none;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .calendar-event:hover {
+        color: #fff;
+        filter: brightness(.95);
+    }
+
+    .calendar-event-project {
+        background: var(--primary-color);
+    }
+
+    .calendar-event-post {
+        background: #0f8f5f;
+    }
+
+    .calendar-event-task {
+        background: #7c3aed;
+    }
+
+    .calendar-event-task-high {
+        background: #d97706;
+    }
+
+    .calendar-event-task-urgent {
+        background: #dc2626;
+    }
+
+    .calendar-event small {
+        display: block;
+        opacity: .82;
+        font-weight: 600;
+        margin-top: 2px;
+    }
+
+    .calendar-empty {
+        color: #98a2b3;
+        font-size: .78rem;
+    }
+
+    .calendar-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    @media (max-width: 1100px) {
+        .calendar-shell {
+            overflow-x: auto;
+        }
+
+        .calendar-grid {
+            min-width: 860px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .calendar-toolbar {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .calendar-title h1 {
+            font-size: 1.55rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-toolbar">
+    <div class="calendar-title">
+        <h1>{{ month_name }} de {{ year }}</h1>
+        <p>Trabajos y publicaciones organizados por fecha real del calendario.</p>
+    </div>
+    <div class="calendar-nav">
+        <a href="{% url 'calendar_task_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Agregar entrega
+        </a>
+        <a href="?month={{ previous_month.month }}&year={{ previous_month.year }}&tipo={{ event_filter }}" class="btn btn-outline-primary" aria-label="Mes anterior">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+        <a href="?month={{ today.month }}&year={{ today.year }}&tipo={{ event_filter }}" class="btn btn-outline-primary">Hoy</a>
+        <a href="?month={{ next_month.month }}&year={{ next_month.year }}&tipo={{ event_filter }}" class="btn btn-outline-primary" aria-label="Mes siguiente">
+            <i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
+</div>
+
+<div class="calendar-filter">
+    <a href="?month={{ month }}&year={{ year }}&tipo=todo" class="btn btn-sm {% if event_filter == 'todo' %}btn-primary{% else %}btn-outline-primary{% endif %}">Todo</a>
+    <a href="?month={{ month }}&year={{ year }}&tipo=entregas" class="btn btn-sm {% if event_filter == 'entregas' %}btn-primary{% else %}btn-outline-primary{% endif %}">Entregas</a>
+    <a href="?month={{ month }}&year={{ year }}&tipo=publicaciones" class="btn btn-sm {% if event_filter == 'publicaciones' %}btn-primary{% else %}btn-outline-primary{% endif %}">Publicaciones</a>
+</div>
+
+<div class="calendar-summary">
+    <span class="calendar-pill"><i class="bi bi-calendar-check me-1"></i>{{ total_events }} eventos este mes</span>
+    <span class="calendar-pill"><i class="bi bi-bell me-1"></i>{{ pending_events }} pendientes desde hoy</span>
+    <span class="calendar-pill"><i class="bi bi-box-seam me-1"></i>{{ task_count }} entregas internas</span>
+</div>
+
+<div class="calendar-shell">
+    <div class="calendar-grid">
+        {% for weekday in weekdays %}
+        <div class="calendar-weekday">{{ weekday }}</div>
+        {% endfor %}
+
+        {% for week in weeks %}
+            {% for day in week %}
+            <div class="calendar-day {% if not day.is_current_month %}calendar-day-muted{% endif %} {% if day.is_today %}calendar-day-today{% endif %}">
+                <div class="calendar-day-header">
+                    <span class="calendar-day-number">{{ day.number }}</span>
+                    {% if day.is_current_month %}
+                    <a class="calendar-day-add" href="{% url 'calendar_task_create' %}?date={{ day.date|date:'Y-m-d' }}" aria-label="Agregar entrega el {{ day.date|date:'d/m/Y' }}">
+                        <i class="bi bi-plus-circle"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="calendar-event-list">
+                    {% for event in day.events %}
+                    <a href="{{ event.url }}" class="calendar-event {{ event.class }}" title="{{ event.type }}: {{ event.title }}">
+                        <i class="bi {{ event.icon }} me-1"></i>{{ event.title|truncatechars:34 }}
+                        {% if event.client_name %}<small>{{ event.client_name }}</small>{% endif %}
+                        <small>{{ event.type }} · {{ event.status }}</small>
+                    </a>
+                    {% empty %}
+                    <span class="calendar-empty">Sin eventos</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

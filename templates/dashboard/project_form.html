@@ -1,0 +1,36 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}{% if project %}Editar Trabajo{% else %}Nuevo Trabajo{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="fw-bold mb-0">{% if project %}Editar Trabajo{% else %}Nuevo Trabajo{% endif %}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Titulo *</label>{{ form.title }}</div>
+                        <div class="col-md-6"><label class="form-label">Slug *</label>{{ form.slug }}</div>
+                        <div class="col-md-6"><label class="form-label">Categoria *</label>{{ form.category }}</div>
+                        <div class="col-md-6"><label class="form-label">Estado *</label>{{ form.status }}</div>
+                        <div class="col-12"><label class="form-label">Descripcion *</label>{{ form.description }}</div>
+                        <div class="col-md-6"><label class="form-label">Imagen principal *</label>{{ form.main_image }}</div>
+                        <div class="col-md-6"><label class="form-label">Cliente o tipo de cliente</label>{{ form.client_name }}</div>
+                        <div class="col-md-6"><label class="form-label">Etiquetas</label>{{ form.tags }}</div>
+                        <div class="col-md-6"><label class="form-label">Fecha de publicacion *</label>{{ form.publication_date }}</div>
+                        <div class="col-12 form-check ms-2">{{ form.is_featured }} <label class="form-check-label">Trabajo destacado</label></div>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-2"></i>Guardar</button>
+                        <a href="{% url 'dashboard_projects' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - Mar Art{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Nuestro Blog</h1>
+            <p class="text-muted">Consejos, tutoriales y novedades del mundo digital</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="{% url 'blog' %}" class="btn {% if not category_filter %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+                    <a href="?category=tips" class="btn {% if category_filter == 'tips' %}btn-primary{% else %}btn-outline-primary{% endif %}">Consejos</a>
+                    <a href="?category=news" class="btn {% if category_filter == 'news' %}btn-primary{% else %}btn-outline-primary{% endif %}">Novedades</a>
+                    <a href="?category=tutorial" class="btn {% if category_filter == 'tutorial' %}btn-primary{% else %}btn-outline-primary{% endif %}">Tutoriales</a>
+                    <a href="?category=inspiration" class="btn {% if category_filter == 'inspiration' %}btn-primary{% else %}btn-outline-primary{% endif %}">Inspiración</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-img-top position-relative" style="height: 220px; overflow: hidden;">
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ post.title }}">
+                        {% else %}
+                        <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="bi bi-newspaper text-white fs-1"></i>
+                        </div>
+                        {% endif %}
+                        <span class="position-absolute top-0 end-0 badge bg-success m-2">{{ post.get_category_display }}</span>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>{{ post.publication_date|date:"d M Y" }}
+                        </small>
+                        <h5 class="card-title fw-bold mt-2">{{ post.title }}</h5>
+                        <p class="card-text text-muted small">{{ post.summary }}</p>
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-primary">Leer más</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-journal-x display-1 text-muted"></i>
+                <p class="text-muted mt-3">No hay publicaciones disponibles en esta categoría.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

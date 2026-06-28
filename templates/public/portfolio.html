@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Trabajos recientes - Mar Art{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow text-primary">Portafolio</span>
+        <h1>Trabajos recientes</h1>
+        <p>Galeria visual tipo Instagram con productos realizados para clientes, equipos, negocios y eventos.</p>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="container">
+        <form class="catalog-filter mb-4" method="get">
+            <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="Buscar trabajo, cliente o etiqueta">
+            <select class="form-select" name="category">
+                <option value="">Todas las categorias</option>
+                {% for value,label in categories %}
+                <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="instagram-grid">
+            {% for project in projects %}
+            <a href="{{ project.get_absolute_url }}" class="ig-card">
+                {% if project.main_image %}
+                <img src="{{ project.main_image.url }}" alt="{{ project.title }}">
+                {% else %}
+                <div class="image-placeholder"><i class="bi bi-image"></i></div>
+                {% endif %}
+                <div class="ig-overlay">
+                    <small>{{ project.publication_date|date:"d M Y" }} · {{ project.get_category_display }}</small>
+                    <strong>{{ project.title }}</strong>
+                    {% if project.client_name %}<span>{{ project.client_name }}</span>{% endif %}
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-state">No hay trabajos publicados en esta categoria.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

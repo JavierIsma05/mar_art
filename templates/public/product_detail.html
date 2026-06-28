@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.title }} - Mar Art{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-6">
+                {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" class="detail-image" alt="{{ product.title }}">
+                {% else %}
+                <div class="detail-image image-placeholder"><i class="bi bi-box-seam"></i></div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <span class="eyebrow text-primary">{{ product.get_category_display }}</span>
+                <h1 class="display-5 fw-bold mt-2">{{ product.title }}</h1>
+                <p class="lead text-muted">{{ product.description }}</p>
+                <p class="status-line">{% if product.is_available %}Disponible bajo pedido{% else %}No disponible actualmente{% endif %}</p>
+                {% if product.price %}<h2 class="price">Desde ${{ product.price }}</h2>{% endif %}
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="{{ product.quote_url }}" class="btn btn-primary btn-lg">Solicitar cotizacion</a>
+                    <a href="https://wa.me/593981044565?text=Hola,%20quiero%20cotizar%20{{ product.title|urlencode }}" class="btn btn-success btn-lg" target="_blank" rel="noopener">
+                        <i class="bi bi-whatsapp me-2"></i>WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

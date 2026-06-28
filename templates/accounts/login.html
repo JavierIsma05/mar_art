@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceder - Mar Art{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Acceder al Panel</h2>
+                            <p class="text-muted">Ingresa tus credenciales para continuar</p>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label">Usuario</label>
+                                <input type="text" name="username" class="form-control" id="id_username" required autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_password" class="form-label">Contraseña</label>
+                                <input type="password" name="password" class="form-control" id="id_password" required>
+                            </div>
+                            {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                {{ error }}
+                                {% endfor %}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                            </button>
+                        </form>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'home' %}" class="text-decoration-none">Volver al inicio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

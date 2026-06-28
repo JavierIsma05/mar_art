@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos personalizados - Mar Art{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow text-primary">Catalogo</span>
+        <h1>Productos personalizados</h1>
+        <p>Camisetas, hoodies, stickers, tarjetas, tazas, encendedores, bolsos y articulos para emprendimientos.</p>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="container">
+        <form class="catalog-filter mb-4" method="get">
+            <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="Buscar producto">
+            <select class="form-select" name="category">
+                <option value="">Todas las categorias</option>
+                {% for value,label in categories %}
+                <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="product-card">
+                    <a href="{{ product.get_absolute_url }}">
+                        {% if product.main_image %}
+                        <img src="{{ product.main_image.url }}" alt="{{ product.title }}">
+                        {% else %}
+                        <div class="image-placeholder"><i class="bi bi-box-seam"></i></div>
+                        {% endif %}
+                    </a>
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge text-bg-light">{{ product.get_category_display }}</span>
+                            <span class="availability {% if product.is_available %}available{% endif %}">
+                                {% if product.is_available %}Disponible{% else %}No disponible{% endif %}
+                            </span>
+                        </div>
+                        <h2>{{ product.title }}</h2>
+                        <p>{{ product.description|truncatewords:18 }}</p>
+                        <div class="d-flex justify-content-between align-items-center gap-3">
+                            {% if product.price %}<strong>Desde ${{ product.price }}</strong>{% else %}<strong>A cotizar</strong>{% endif %}
+                            <a href="{{ product.quote_url }}" class="btn btn-primary btn-sm">Solicitar por WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">No hay productos que coincidan con tu busqueda.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

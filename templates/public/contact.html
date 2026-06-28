@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitar cotizacion - Mar Art{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow text-primary">Cotizacion</span>
+        <h1>Solicita tu producto personalizado</h1>
+        <p>Comparte tu idea, cantidad, fecha y una referencia visual si la tienes. Recomendamos minimo 48 horas de anticipacion.</p>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="surface-card">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.full_name.id_for_label }}">Nombre *</label>
+                                {{ form.full_name }}
+                                {{ form.full_name.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.whatsapp.id_for_label }}">WhatsApp *</label>
+                                {{ form.whatsapp }}
+                                {{ form.whatsapp.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                                {{ form.email }}
+                                {{ form.email.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.service_interest.id_for_label }}">Tipo de producto *</label>
+                                {{ form.service_interest }}
+                                {{ form.service_interest.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.quantity.id_for_label }}">Cantidad *</label>
+                                {{ form.quantity }}
+                                {{ form.quantity.errors }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.needed_date.id_for_label }}">Fecha requerida</label>
+                                {{ form.needed_date }}
+                                {{ form.needed_date.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="{{ form.message.id_for_label }}">Descripcion de la idea *</label>
+                                {{ form.message }}
+                                {{ form.message.errors }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="{{ form.reference_image.id_for_label }}">Imagen de referencia</label>
+                                {{ form.reference_image }}
+                                {{ form.reference_image.errors }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                            <i class="bi bi-send me-2"></i>Guardar solicitud
+                        </button>
+                    </form>
+
+                    {% if whatsapp_message %}
+                    <a class="btn btn-success btn-lg w-100 mt-3" href="https://wa.me/593981044565?text={{ whatsapp_message }}" target="_blank" rel="noopener">
+                        <i class="bi bi-whatsapp me-2"></i>Enviar datos por WhatsApp
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="surface-card dark-card">
+                    <h2>Antes de pedir</h2>
+                    <p>Indica producto, cantidad, colores, logo, frase, medidas y fecha. Mientras mas clara sea la referencia, mejor queda la propuesta.</p>
+                    <ul class="check-list">
+                        <li>Pedidos con minimo 48 horas.</li>
+                        <li>Atencion directa por WhatsApp.</li>
+                        <li>Productos para negocios, eventos y regalos.</li>
+                        <li>Entrega organizada por pedido.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

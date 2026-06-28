@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Mar Art - Productos personalizados{% endblock %}
+{% block meta_description %}Catalogo de camisetas, hoodies, stickers, tarjetas, tazas, encendedores y bolsos personalizados para eventos y negocios.{% endblock %}
+
+{% block content %}
+<section class="hero-section text-white">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="eyebrow">Personalizados bajo pedido</span>
+                <h1 class="hero-title mt-3">Mar_Art</h1>
+                <p class="hero-copy">Productos personalizados para tu evento, negocio o emprendimiento.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'products' %}" class="btn btn-light btn-lg"><i class="bi bi-grid me-2"></i>Ver productos</a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg"><i class="bi bi-clipboard2-check me-2"></i>Solicitar cotizacion</a>
+                    <a href="https://wa.me/593981044565" target="_blank" rel="noopener" class="btn btn-success btn-lg"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-showcase">
+                    <div class="mockup-tile tile-one">Camisetas</div>
+                    <div class="mockup-tile tile-two">Stickers</div>
+                    <div class="mockup-tile tile-three">Tazas</div>
+                    <div class="mockup-tile tile-four">Bolsos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow text-primary">Portafolio visual</span>
+            <h2>Ultimos trabajos y publicaciones</h2>
+        </div>
+        <div class="instagram-grid">
+            {% for project in featured_projects %}
+            <a href="{{ project.get_absolute_url }}" class="ig-card">
+                {% if project.main_image %}
+                <img src="{{ project.main_image.url }}" alt="{{ project.title }}">
+                {% else %}
+                <div class="image-placeholder"><i class="bi bi-image"></i></div>
+                {% endif %}
+                <div class="ig-overlay">
+                    <small>{{ project.publication_date|date:"d M Y" }} · {{ project.get_category_display }}</small>
+                    <strong>{{ project.title }}</strong>
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-state">Publica tus trabajos desde el panel para llenar esta galeria.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5 section-soft">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow text-primary">Catalogo</span>
+            <h2>Productos destacados</h2>
+        </div>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="product-card">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.title }}">
+                    {% else %}
+                    <div class="image-placeholder"><i class="bi bi-box-seam"></i></div>
+                    {% endif %}
+                    <div class="p-4">
+                        <span class="badge text-bg-light">{{ product.get_category_display }}</span>
+                        <h3>{{ product.title }}</h3>
+                        <p>{{ product.description|truncatewords:18 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if product.price %}<strong>Desde ${{ product.price }}</strong>{% else %}<strong>A cotizar</strong>{% endif %}
+                            <a href="{{ product.quote_url }}" class="btn btn-primary btn-sm">Cotizar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">Marca productos como destacados desde el panel.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="notice-band">
+            <i class="bi bi-clock-history"></i>
+            <div>
+                <h2>Pedidos con 48 horas de anticipacion</h2>
+                <p>Para cuidar diseno, produccion y entrega, recomendamos solicitar cada pedido con minimo dos dias de anticipacion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 benefits-row">
+            <div class="col-md-3"><i class="bi bi-brush"></i><h3>Disenos personalizados</h3></div>
+            <div class="col-md-3"><i class="bi bi-whatsapp"></i><h3>Atencion por WhatsApp</h3></div>
+            <div class="col-md-3"><i class="bi bi-shop"></i><h3>Para negocios y eventos</h3></div>
+            <div class="col-md-3"><i class="bi bi-calendar-check"></i><h3>Entrega por pedido</h3></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

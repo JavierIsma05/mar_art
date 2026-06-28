@@ -1,0 +1,27 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}Eliminar Producto{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="fw-bold mb-0 text-danger">Eliminar Producto</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">¿Estás seguro de que deseas eliminar el producto <strong>{{ product.title }}</strong>? Esta acción no se puede deshacer.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-2"></i>Eliminar
+                        </button>
+                        <a href="{% url 'dashboard_products' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
